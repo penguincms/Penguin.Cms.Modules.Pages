@@ -1,0 +1,189 @@
+﻿@model EditNodePageModel
+
+@{
+    Layout = "_Layout";
+
+    Html.IncludeJS("/lib/CKEditor/ckeditor",
+           "/lib/CKEditor/config",
+           "/lib/CodeMirror/lib/codemirror",
+           "/lib/CodeMirror/mode/htmlmixed/htmlmixed",
+           "admin/page");
+
+    Html.IncludeCSS("/lib/CKEditor/skins/moono-lisa/editor",
+                    "/lib/CodeMirror/lib/codemirror");
+
+    int ti = 0;
+
+    bool ExistingPage = Model.Page._Id != 0;
+    string formAction = ExistingPage ? "/Admin/Page/EditNode" : "/Admin/Page/AddPage";
+
+}
+
+<div class="ui-tabs">
+    <ul>
+        <li><a href="#Settings">Settings</a></li>
+        @foreach (ViewModule vm in Model.Modules)
+        {
+            <li><a href="#@vm.Id">@vm.Name</a></li>
+        }
+    </ul>
+    <div id="Settings">
+        <form action="@Html.Raw(formAction)" method="Post">
+            @if (!ExistingPage)
+            {
+                <input type="hidden" name="BaseUrl" value="@Model.BaseUrl" />
+            }
+            else
+            {
+                <input type="hidden" name="Page._Id" value="@Model.Page._Id" />
+            }
+            <property data-editable="True">
+                <name>
+                    Editor Type
+                </name>
+                <value>
+                    <select data-propertyname="Page.Type" name="Page.Type" data-cloneid="@Guid.NewGuid()">
+                        @{
+                            foreach (Page.PageType option in new List<Page.PageType>()
+                                                                                { Page.PageType.WYSIWYG,
+                              Page.PageType.HTML
+                            })
+                            {
+                                <!option value="@option.ToString()" @Html.Attribute("selected", Model.Page.Type == option)>@option.ToString()</!option>
+                            }
+                        }
+                    </select>
+                </value>
+            </property>
+
+            <property data-editable="True">
+                <name>
+                    Layout
+                </name>
+
+                <value>
+                    @if (ExistingPage)
+                    {
+                        <input type="text" data-propertyname="Page.Layout" name="Page.Layout" value="@Model.Page.Layout" />
+                    }
+                    else
+                    {
+                        <input type="text" data-propertyname="Page.Layout" name="Page.Layout" value="~/Views/Shared/_Layout.cshtml" />
+                    }
+                </value>
+            </property>
+
+            <property data-editable="True">
+                <name>
+                    Url
+                </name>
+
+                <value>
+                    @if (ExistingPage)
+                    {
+                        <input type="text" data-propertyname="Page.Url" name="Page.Url" value="@Model.Page.Url" required>
+                    }
+                    else
+                    {
+                        <label>@Model.BaseUrl</label><input type="text" data-propertyname="Page.Url" name="Page.Url" required>
+                    }
+                </value>
+            </property>
+            <property data-editable="True">
+                <name>
+                    Apply To Children
+                </name>
+                <value>
+                    @Html.CheckBoxFor(m => m.Page.Cascade)
+                </value>
+            </property>
+            <property>
+                <name>
+                    Parameters
+                </name>
+                <value style="padding: 0px;">
+                    <table class="parameters">
+                        <tr>
+                            <th>Name</th>
+                            <th>Default Value</th>
+                            <th></th>
+                        </tr>
+                        @foreach (TemplateParameter thisParameter in Model.Page.Parameters)
+                        {
+                            <tr class="parameterRow" data-name="@thisParameter.Name">
+                                <td><input type="text" value="@thisParameter.Name" name="Page.Parameters[@ti].Name" class="parameterName" readonly /></td>
+                                <td><input type="text" value="@thisParameter.Value" name="Page.Parameters[@ti].Value" class="parameterValue" /></td>
+                                <td><a href="#" onclick="deleteParameter(this)">@Html.MaterialIcon("delete")</a></td>
+                            </tr>
+                            ti++;
+                        }
+                    </table>
+                    <div class="newParam">
+                        <input type="text" id="NewParameterName" placeholder="Parameter Name" />
+                        <a href="#" id="AddParameter" onclick="addParameter(); return false;">
+                            @Html.MaterialIcon("add_box")
+                            <p>Add New Parameter</p>
+                        </a>
+                    </div>
+                </value>
+            </property>
+            <property>
+                <name>
+                    Available Macros
+                </name>
+                <value style="padding: 0px;">
+                    @foreach (IGrouping<string, Macro> thisGroup in Model.Macros.GroupBy(m => m.DisplayGroup))
+                    {
+                        <div class="ui-accordion">
+                            <h3>@thisGroup.Key</h3>
+                            <div>
+                                @foreach (Macro thisMacro in thisGroup)
+                                {
+                                    <span class="macro" data-handler="@thisMacro.DisplayGroup" data-name="@thisMacro.DisplayGroup">@thisMacro.DisplayName</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </value>
+            </property>
+            <property class="CKEditorHolder">
+                <name>
+                    Content
+                </name>
+                <value style="padding: 0px;">
+                    <textarea type="text" id="Content" data-propertyname="Page.Content" name="Page.Content" data-cloneid="@Guid.NewGuid()">@Model.Page.Content</textarea>
+                </value>
+            </property>
+            @if (Model.Page.Type == Page.PageType.WYSIWYG)
+            {
+                <script>
+                    $(document).ready(function () {
+                        CKEDITOR.replace('Content');
+                        reindexParameters();
+                    });
+                </script>
+            }
+            else if (Model.Page.Type == Page.PageType.HTML)
+            {
+                <script>
+                    $(document).ready(function () {
+                        var editor = CodeMirror.fromTextArea(document.getElementById("Content"), {
+                            lineNumbers: true
+                        });
+
+                        reindexParameters();
+                    });
+                </script>
+            }
+            <button>
+                Submit
+            </button>
+        </form>
+    </div>
+    @foreach (ViewModule vm in Model.Modules)
+    {
+        <div id="@vm.Id">
+            <partial name="@vm.ViewPath" model="@vm.Model" />
+        </div>
+    }
+</div>

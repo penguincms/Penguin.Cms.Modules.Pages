@@ -1,0 +1,125 @@
+﻿@{
+
+    Guid treeGuid = Guid.NewGuid();
+
+    Func<TreeNode<Page>, IHtmlContent> Render = null;
+    Render = this.Helper((TreeNode<Page> p) => @<text>
+        @{
+        string Icon = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(p?.Value?.Content) && p.HasChildren)
+        {
+            Icon = "folder";
+        }
+        else if (p?.Value?.Type == Page.PageType.CSS)
+        {
+            Icon = "color_lens";
+        }
+        else if (p?.Value?.Type == Page.PageType.JS)
+        {
+            Icon = "settings";
+        }
+        else if (p?.Value?.Type == Page.PageType.HTML)
+        {
+            Icon = "code";
+        }
+        else
+        {
+            Icon = "description";
+        }
+        }
+        <li data-url="@(p?.Value?.Url ?? p.Name)" data-hascontent="@p.IsReal" data-id="@(p?.Value?._Id ?? 0)" data-jstree='{"icon":"/Images/Material Icons/web/ic_@(Icon)_white_18dp.png"}'>
+
+            @if (p.HasChildren)
+            {
+            @p.Name
+            <ul>
+                @foreach (TreeNode<Page> thischild in p.Children.OrderBy(pi => { return !pi.HasChildren; }).ThenBy(pi => { return pi.Name; }))
+                    {
+                @Render(thischild)
+                    }
+            </ul>
+            } else
+            {
+            <a href="/Admin/Page/EditNode?Url=@(p.Value?.Url ?? p.Name)">@p.Name</a>
+            }
+        </li>
+    </text>);
+}
+<div id="@treeGuid">
+    <ul>
+        @Render(ServiceProvider.GetService<PageRepository>().All.ToTree(p => p.Url, '/', StringComparer.OrdinalIgnoreCase))
+    </ul>
+</div>
+<script>
+	function customMenu(node) {
+		var items = {
+			editItem: { // The "rename" menu item
+				label: "Edit",
+				action: function () {
+					window.location = '/Admin/Page/EditNode?Url=' + node.data.url;
+				}
+			},
+			addFolderItem: { // The "rename" menu item
+				label: "Add Folder",
+				action: function () {
+					window.location = '/Admin/Page/AddFolder?Url=' + node.data.url;
+				}
+			},
+			addPageItem: { // The "rename" menu item
+				label: "Add Page",
+				action: function () {
+					window.location = '/Admin/Page/AddPage?Url=' + node.data.url;
+				}
+            },
+            addCSSItem: { // The "rename" menu item
+                label: "Add Style Sheet",
+                action: function () {
+                    window.location = '/Admin/Page/AddCSS?Url=' + node.data.url;
+                }
+            },
+            addJJItem: { // The "rename" menu item
+                label: "Add Javascript",
+                action: function () {
+                    window.location = '/Admin/Page/AddJS?Url=' + node.data.url;
+                }
+            },
+			deleteItem: { // The "delete" menu item
+				label: "Delete",
+				action: function () {
+					if (confirm('Are you sure you want to delete ' + node.data.url + ' and everything beneath it?')) {
+						window.location = '/Admin/Page/DeleteNode?Url=' + node.data.url;
+					}
+				}
+			}
+		};
+
+		return items;
+	}
+
+	$('#@treeGuid')
+		.jstree({
+			plugins: ["contextmenu"],
+			contextmenu: { items: customMenu },
+			core: {
+				dblclick_toggle: false,
+				themes: {
+					name: "default-dark",
+					dots: true,
+					icons: true,
+					variant: "large"
+				}
+			}
+		});
+
+    $('#@treeGuid').on("activate_node.jstree", function (e, data) {
+        if (data.event.button !== 2) {
+            if (data.node.a_attr.href === '#') {
+                data.instance.toggle_node(data.node);
+            } else {
+                Site.ShowLoader();
+                window.location.href = data.node.a_attr.href;
+            }
+        }
+	});
+</script>

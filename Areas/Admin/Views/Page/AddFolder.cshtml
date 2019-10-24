@@ -1,0 +1,19 @@
+﻿@model EditNodePageModel
+
+@{
+	Layout = "_Layout";
+}
+<form action="/Admin/Page/AddFolder" method="Post">
+    <input type="hidden" name="BaseUrl" value="@Model.BaseUrl" />
+    <property data-editable="True">
+        <name>
+            Name
+        </name>
+        <value>
+            <input type="text" data-propertyname="Page.Url" name="Page.Url" value="" data-cloneid="@Guid.NewGuid()">
+        </value>
+    </property>
+    <button>
+        Submit
+    </button>
+</form>

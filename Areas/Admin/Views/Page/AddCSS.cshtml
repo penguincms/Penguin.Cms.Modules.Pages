@@ -1,0 +1,46 @@
+﻿@model EditNodePageModel
+
+@{
+	Layout = "_Layout";
+	Html.IncludeJS("/lib/CodeMirror/lib/codemirror",
+		   "/lib/CodeMirror/mode/css/css");
+	Html.IncludeCSS("/lib/CodeMirror/lib/codemirror");
+}
+
+<form action="/Admin/Page/AddPage" method="Post">
+    <input type="hidden" name="BaseUrl" value="@Model.BaseUrl" />
+    <input type="hidden" name="Page.Type" value="CSS" />
+    <property data-editable="True">
+        <name>
+            Url
+        </name>
+        <value>
+            <label>@System.IO.Path.Combine(Model.BaseUrl, "Client.css").Replace("\\", "/")</label>
+            <input type="hidden" data-propertyname="Page.Url" name="Page.Url" value="@System.IO.Path.Combine(Model.BaseUrl, "Client.css").Replace("\\", "/")" data-cloneid="@Guid.NewGuid()">
+        </value>
+    </property>
+    <property data-editable="True">
+        <name>
+            Apply To Children
+        </name>
+        <value>
+            @Html.CheckBoxFor(m => m.Page.Cascade)
+        </value>
+    </property>
+    <property class="CKEditorHolder">
+        <name>
+            Content
+        </name>
+        <value style="padding: 0px">
+            <textarea id="editor" class="CSSEditor" data-propertyname="Page.Content" name="Page.Content" value="" data-cloneid="@Guid.NewGuid()"></textarea>
+        </value>
+    </property>
+    <button>
+        Submit
+    </button>
+</form>
+<script>
+	var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+		lineNumbers: true
+	});
+</script>
