@@ -20,11 +20,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.0" />
     <PackageReference Include="Penguin.Cms.Abstractions" Version="1.0.0" />
+    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="1.0.0" />
     <PackageReference Include="Penguin.Cms.Web.Pages" Version="1.0.0" />
     <PackageReference Include="Penguin.Web.Mvc.Abstractions" Version="1.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Penguin.Cms.Modules.Dynamic\Penguin.Cms.Modules.Dynamic.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
