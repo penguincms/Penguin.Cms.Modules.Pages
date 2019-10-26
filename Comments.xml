@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Penguin.Cms.Modules.Pages.Local</name>
+        <name>Penguin.Cms.Modules.Pages</name>
     </assembly>
     <members>
         <member name="T:Penguin.Cms.Modules.Pages.Macros.Field">
