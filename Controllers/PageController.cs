@@ -20,7 +20,7 @@ namespace Penguin.Cms.Modules.Pages.Controllers
         public PageController(PageRepository pageRepository, PageRenderer pageRenderer)
         {
             this.PageRenderer = pageRenderer;
-            PageRepository = pageRepository;
+            this.PageRepository = pageRepository;
         }
 
         public ActionResult RenderPage(string Url)

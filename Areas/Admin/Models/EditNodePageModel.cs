@@ -11,6 +11,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
     [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
     public class EditNodePageModel
     {
+        private List<Macro>? _macros;
         public string? BaseUrl { get; set; }
 
         [SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
@@ -37,8 +38,6 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
 
         public ICollection<ViewModule> Modules { get; set; } = new List<ViewModule>();
         public Page? Page { get; set; }
-
-        private List<Macro>? _macros;
 
         public EditNodePageModel()
         {

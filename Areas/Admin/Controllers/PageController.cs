@@ -8,7 +8,6 @@ using Penguin.Cms.Pages;
 using Penguin.Cms.Pages.Repositories;
 using Penguin.Cms.Web.Modules;
 using Penguin.Persistence.Abstractions.Interfaces;
-using Penguin.Security.Abstractions.Attributes;
 using Penguin.Web.Security.Attributes;
 using System;
 using System.Collections.Generic;
@@ -19,21 +18,21 @@ using System.Linq;
 namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
 {
     //I dont remember why theres so much manual binding in this class. Should probably be fixed, if there isn't a reason
-    [RequiresRole(RoleNames.ContentManager)]
+    [RequiresRole(RoleNames.CONTENT_MANAGER)]
     [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
     [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
     public class PageController : ObjectManagementController<Page>
     {
-        protected ComponentService ComponentService { get; set; }
-        protected PageRepository PageRepository { get; set; }
         private const string NULL_BASE_URL_MESSAGE = "Base Url can not be null";
         private const string NULL_PAGE_MESSAGE = "Page on model can not be null";
         private const string NULL_PAGE_URL_MESSAGE = "Page Url can not be null";
+        protected ComponentService ComponentService { get; set; }
+        protected PageRepository PageRepository { get; set; }
 
         public PageController(ComponentService componentService, PageRepository pageRepository, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            ComponentService = componentService;
-            PageRepository = pageRepository;
+            this.ComponentService = componentService;
+            this.PageRepository = pageRepository;
         }
 
         public ActionResult AddCSS(string Url)
@@ -68,7 +67,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 throw new NullReferenceException(NULL_PAGE_URL_MESSAGE);
             }
 
-            using (IWriteContext writeContext = PageRepository.WriteContext())
+            using (IWriteContext writeContext = this.PageRepository.WriteContext())
             {
                 Page thisPage = new Page
                 {
@@ -92,7 +91,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
         {
             EditNodePageModel model = new EditNodePageModel(Url)
             {
-                Macros = new MacroService(ServiceProvider).GetMacros(null)
+                Macros = new MacroService(this.ServiceProvider).GetMacros(null)
             };
 
             return this.View("EditNode", model);
@@ -116,7 +115,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 throw new NullReferenceException(NULL_PAGE_URL_MESSAGE);
             }
 
-            using (IWriteContext writeContext = PageRepository.WriteContext())
+            using (IWriteContext writeContext = this.PageRepository.WriteContext())
             {
                 model.Page.Url = Path.Combine(model.BaseUrl, model.Page.Url ?? "").Replace("\\", "/", StringComparison.OrdinalIgnoreCase);
 
@@ -128,7 +127,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
 
         public ActionResult DeleteNode(string Url)
         {
-            using (IWriteContext writeContext = PageRepository.WriteContext())
+            using (IWriteContext writeContext = this.PageRepository.WriteContext())
             {
                 Page thisPage = this.PageRepository.GetByUrl(Url);
 
@@ -147,7 +146,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 throw new NullReferenceException(NULL_PAGE_MESSAGE);
             }
 
-            model.Modules = ComponentService.GetComponents<ViewModule, Entity>(model.Page).ToList();
+            model.Modules = this.ComponentService.GetComponents<ViewModule, Entity>(model.Page).ToList();
 
             if (Page.GetPageType(Url) == Page.PageType.CSS)
             {
@@ -158,7 +157,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 return this.View("EditJS", model);
             }
 
-            model.Macros = new MacroService(ServiceProvider).GetMacros(model.Page);
+            model.Macros = new MacroService(this.ServiceProvider).GetMacros(model.Page);
 
             return this.View(model);
         }
@@ -176,7 +175,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 throw new NullReferenceException(NULL_PAGE_MESSAGE);
             }
 
-            using (IWriteContext writeContext = PageRepository.WriteContext())
+            using (IWriteContext writeContext = this.PageRepository.WriteContext())
             {
                 Page thisPage = this.PageRepository.Find(model.Page._Id);
 

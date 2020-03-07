@@ -18,13 +18,12 @@ namespace Penguin.Cms.Modules.Pages.Macros
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     public class Template : IMessageHandler<Updated<Page>>, IMessageHandler<Created<Page>>, IMessageHandler<Penguin.Messaging.Application.Messages.Startup>, IMacroProvider
     {
+        private static readonly List<Macro> TemplateMacros = new List<Macro>();
         protected PageRenderer PageRenderer { get; set; }
 
         protected PageRepository PageRepository { get; set; }
 
         protected IViewRenderService ViewRenderService { get; set; }
-
-        private static readonly List<Macro> TemplateMacros = new List<Macro>();
 
         public Template(PageRenderer pageRenderer, IViewRenderService viewRenderService, PageRepository pageRepository)
         {
@@ -35,17 +34,23 @@ namespace Penguin.Cms.Modules.Pages.Macros
 
         public void AcceptMessage(Updated<Page> page)
         {
-            Refresh();
+            this.Refresh();
         }
 
         public void AcceptMessage(Created<Page> page)
         {
-            Refresh();
+            this.Refresh();
         }
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup) => Refresh();
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
+        {
+            this.Refresh();
+        }
 
-        public List<Macro> GetMacros(object o) => TemplateMacros;
+        public List<Macro> GetMacros(object o)
+        {
+            return TemplateMacros;
+        }
 
         [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
         public HtmlString Render(string Url, object? Model = null)
@@ -100,7 +105,7 @@ namespace Penguin.Cms.Modules.Pages.Macros
             {
                 TemplateMacros.Clear();
 
-                IEnumerable<Page> allPages = PageRepository.Where(p => p.Type == Page.PageType.HTML || p.Type == Page.PageType.WYSIWYG);
+                IEnumerable<Page> allPages = this.PageRepository.Where(p => p.Type == Page.PageType.HTML || p.Type == Page.PageType.WYSIWYG);
 
                 foreach (Page thisPage in allPages)
                 {

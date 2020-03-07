@@ -24,7 +24,7 @@ namespace Penguin.Cms.Modules.Pages.ComponentProviders
                             Href = "/Admin/Page/Index",
                             Permissions = new List<ISecurityGroupPermission>()
                             {
-                                this.CreatePermission(RoleNames.ContentManager, PermissionTypes.Read)
+                                this.CreatePermission(RoleNames.CONTENT_MANAGER, PermissionTypes.Read)
                             }
                         }
                     }

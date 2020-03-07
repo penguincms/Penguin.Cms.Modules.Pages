@@ -2,8 +2,8 @@
 {
     public static class RoleNames
     {
-        public const string ContentManager = "Content Manager";
+        public const string CONTENT_MANAGER = "Content Manager";
 
-        public const string PageAuthor = "Page Author";
+        public const string PAGE_AUTHOR = "Page Author";
     }
 }
