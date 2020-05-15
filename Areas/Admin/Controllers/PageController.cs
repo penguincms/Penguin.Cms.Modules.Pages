@@ -26,7 +26,6 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
         private const string NULL_BASE_URL_MESSAGE = "Base Url can not be null";
         private const string NULL_PAGE_MESSAGE = "Page on model can not be null";
         private const string NULL_PAGE_URL_MESSAGE = "Page Url can not be null";
-        protected ComponentService ComponentService { get; set; }
         protected PageRepository PageRepository { get; set; }
 
         public PageController(ComponentService componentService, PageRepository pageRepository, IServiceProvider serviceProvider) : base(serviceProvider)
