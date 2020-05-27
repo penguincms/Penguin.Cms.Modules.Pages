@@ -8,6 +8,7 @@ using Penguin.Cms.Pages;
 using Penguin.Cms.Pages.Repositories;
 using Penguin.Cms.Web.Modules;
 using Penguin.Persistence.Abstractions.Interfaces;
+using Penguin.Security.Abstractions.Interfaces;
 using Penguin.Web.Security.Attributes;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
         private const string NULL_PAGE_URL_MESSAGE = "Page Url can not be null";
         protected PageRepository PageRepository { get; set; }
 
-        public PageController(ComponentService componentService, PageRepository pageRepository, IServiceProvider serviceProvider) : base(serviceProvider)
+        public PageController(ComponentService componentService, PageRepository pageRepository, IServiceProvider serviceProvider, IUserSession userSession) : base(serviceProvider, userSession)
         {
             this.ComponentService = componentService;
             this.PageRepository = pageRepository;
