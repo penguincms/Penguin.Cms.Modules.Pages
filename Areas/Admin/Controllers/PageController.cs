@@ -20,7 +20,6 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
 {
     //I dont remember why theres so much manual binding in this class. Should probably be fixed, if there isn't a reason
     [RequiresRole(RoleNames.CONTENT_MANAGER)]
-    [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
     [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
     public class PageController : ObjectManagementController<Page>
     {

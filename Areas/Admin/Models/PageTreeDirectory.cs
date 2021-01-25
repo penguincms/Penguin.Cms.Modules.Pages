@@ -6,7 +6,6 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
 {
     [SuppressMessage("Design", "CA1056:Uri properties should not be strings")]
     [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
-    [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
     public class PageTreeDirectory
     {
         private const string NULL_PAGE_URL_MESSAGE = "Page Url can not be null";
