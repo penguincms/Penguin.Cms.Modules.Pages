@@ -7,14 +7,12 @@ using System.Linq;
 
 namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
 {
-    [SuppressMessage("Design", "CA1056:Uri properties should not be strings")]
-    [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
+
     public class EditNodePageModel
     {
         private List<Macro>? _macros;
         public string? BaseUrl { get; set; }
 
-        [SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
         public List<Macro> Macros
         {
             get

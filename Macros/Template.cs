@@ -52,7 +52,6 @@ namespace Penguin.Cms.Modules.Pages.Macros
             return TemplateMacros;
         }
 
-        [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
         public HtmlString Render(string Url, object? Model = null)
         {
             Page page = this.PageRepository.GetByUrl(Url);

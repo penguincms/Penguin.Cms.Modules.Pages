@@ -20,7 +20,6 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
 {
     //I dont remember why theres so much manual binding in this class. Should probably be fixed, if there isn't a reason
     [RequiresRole(RoleNames.CONTENT_MANAGER)]
-    [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
     public class PageController : ObjectManagementController<Page>
     {
         private const string NULL_BASE_URL_MESSAGE = "Base Url can not be null";

@@ -10,7 +10,6 @@ using TemplateParameter = Penguin.Templating.Abstractions.TemplateParameter;
 
 namespace Penguin.Cms.Modules.Pages.Controllers
 {
-    [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
     public class PageController : Controller
     {
         protected PageRenderer PageRenderer { get; set; }
