@@ -32,25 +32,13 @@ namespace Penguin.Cms.Modules.Pages.Macros
             this.PageRepository = pageRepository;
         }
 
-        public void AcceptMessage(Updated<Page> page)
-        {
-            this.Refresh();
-        }
+        public void AcceptMessage(Updated<Page> page) => this.Refresh();
 
-        public void AcceptMessage(Created<Page> page)
-        {
-            this.Refresh();
-        }
+        public void AcceptMessage(Created<Page> page) => this.Refresh();
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
-        {
-            this.Refresh();
-        }
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup) => this.Refresh();
 
-        public List<Macro> GetMacros(object o)
-        {
-            return TemplateMacros;
-        }
+        public List<Macro> GetMacros(object o) => TemplateMacros;
 
         public HtmlString Render(string Url, object? Model = null)
         {

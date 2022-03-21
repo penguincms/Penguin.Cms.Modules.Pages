@@ -16,15 +16,9 @@ namespace Penguin.Cms.Modules.Pages.Macros
     {
         private static readonly List<Macro> ControllerMacros = new List<Macro>();
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
-        {
-            this.Refresh();
-        }
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup) => this.Refresh();
 
-        public List<Macro> GetMacros(object o)
-        {
-            return ControllerMacros;
-        }
+        public List<Macro> GetMacros(object o) => ControllerMacros;
 
         private void Refresh()
         {
