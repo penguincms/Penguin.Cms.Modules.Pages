@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Penguin.Cms.Modules.Pages.Rendering;
 using Penguin.Cms.Pages;
 using Penguin.Cms.Pages.Repositories;
+using Penguin.Cms.Web.Pages.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;

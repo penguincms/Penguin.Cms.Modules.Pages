@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Penguin.Cms.Abstractions;
 using Penguin.Cms.Abstractions.Interfaces;
-using Penguin.Cms.Modules.Pages.Rendering;
 using Penguin.Cms.Pages;
 using Penguin.Cms.Pages.Repositories;
+using Penguin.Cms.Web.Pages.Rendering;
 using Penguin.Messaging.Abstractions.Interfaces;
 using Penguin.Messaging.Persistence.Messages;
-using Penguin.Web.Mvc.Abstractions;
+using Penguin.Web.Mvc.Abstractions.Interfaces;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -32,13 +32,25 @@ namespace Penguin.Cms.Modules.Pages.Macros
             this.PageRepository = pageRepository;
         }
 
-        public void AcceptMessage(Updated<Page> page) => this.Refresh();
+        public void AcceptMessage(Updated<Page> page)
+        {
+            this.Refresh();
+        }
 
-        public void AcceptMessage(Created<Page> page) => this.Refresh();
+        public void AcceptMessage(Created<Page> page)
+        {
+            this.Refresh();
+        }
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup) => this.Refresh();
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
+        {
+            this.Refresh();
+        }
 
-        public List<Macro> GetMacros(object o) => TemplateMacros;
+        public List<Macro> GetMacros(object o)
+        {
+            return TemplateMacros;
+        }
 
         public HtmlString Render(string Url, object? Model = null)
         {

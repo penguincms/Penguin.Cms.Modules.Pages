@@ -2,7 +2,7 @@
 using Penguin.Cms.Abstractions;
 using Penguin.Cms.Abstractions.Interfaces;
 using Penguin.Cms.Core.Attributes;
-using Penguin.Extensions.Strings;
+using Penguin.Extensions.String;
 using Penguin.Messaging.Abstractions.Interfaces;
 using Penguin.Reflection;
 using System;
@@ -16,9 +16,15 @@ namespace Penguin.Cms.Modules.Pages.Macros
     {
         private static readonly List<Macro> ControllerMacros = new List<Macro>();
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup) => this.Refresh();
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
+        {
+            this.Refresh();
+        }
 
-        public List<Macro> GetMacros(object o) => ControllerMacros;
+        public List<Macro> GetMacros(object o)
+        {
+            return ControllerMacros;
+        }
 
         private void Refresh()
         {

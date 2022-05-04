@@ -210,7 +210,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
             {
                 PageTreeDirectory model = new PageTreeDirectory(child);
 
-                Pages.Remove(model.Page);
+                _ = Pages.Remove(model.Page);
 
                 model = this.BuildPageDirectory(Pages, model);
 
