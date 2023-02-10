@@ -19,6 +19,7 @@ namespace Penguin.Cms.Modules.Pages.Macros
     public class Template : IMessageHandler<Updated<Page>>, IMessageHandler<Created<Page>>, IMessageHandler<Penguin.Messaging.Application.Messages.Startup>, IMacroProvider
     {
         private static readonly List<Macro> TemplateMacros = new();
+
         protected PageRenderer PageRenderer { get; set; }
 
         protected PageRepository PageRepository { get; set; }

@@ -9,6 +9,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
     public class EditNodePageModel
     {
         private List<Macro>? _macros;
+
         public string? BaseUrl { get; set; }
 
         public List<Macro> Macros
@@ -33,6 +34,7 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
         }
 
         public ICollection<ViewModule> Modules { get; set; } = new List<ViewModule>();
+
         public Page? Page { get; set; }
 
         public EditNodePageModel()
