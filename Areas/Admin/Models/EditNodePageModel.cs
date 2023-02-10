@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
 {
-
     public class EditNodePageModel
     {
         private List<Macro>? _macros;
@@ -16,21 +15,21 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
         {
             get
             {
-                List<Macro> toReturn = new List<Macro>();
+                List<Macro> toReturn = new();
 
-                if (this.Page != null)
+                if (Page != null)
                 {
-                    toReturn.AddRange(this.Page.Parameters.Select(p => new Macro("Field", $"@Model.{p.Name}")).ToList());
+                    toReturn.AddRange(Page.Parameters.Select(p => new Macro("Field", $"@Model.{p.Name}")).ToList());
                 }
 
-                if (this._macros != null)
+                if (_macros != null)
                 {
-                    toReturn.AddRange(this._macros);
+                    toReturn.AddRange(_macros);
                 }
 
                 return toReturn;
             }
-            set => this._macros = value;
+            set => _macros = value;
         }
 
         public ICollection<ViewModule> Modules { get; set; } = new List<ViewModule>();
@@ -42,8 +41,8 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
 
         public EditNodePageModel(string baseUrl, Page? page = null)
         {
-            this.Page = page ?? new Page();
-            this.BaseUrl = baseUrl;
+            Page = page ?? new Page();
+            BaseUrl = baseUrl;
         }
     }
 }

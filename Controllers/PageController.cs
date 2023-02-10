@@ -17,31 +17,31 @@ namespace Penguin.Cms.Modules.Pages.Controllers
 
         public PageController(PageRepository pageRepository, PageRenderer pageRenderer)
         {
-            this.PageRenderer = pageRenderer;
-            this.PageRepository = pageRepository;
+            PageRenderer = pageRenderer;
+            PageRepository = pageRepository;
         }
 
         public ActionResult RenderPage(string Url)
         {
-            Url ??= this.RouteData?.Values["Url"]?.ToString() ?? throw new ArgumentNullException(nameof(Url));
+            Url ??= RouteData?.Values["Url"]?.ToString() ?? throw new ArgumentNullException(nameof(Url));
 
             //ToDo move this back to a cache
-            Page page = this.PageRepository.GetByUrl(Url);
+            Page page = PageRepository.GetByUrl(Url);
             string content = page.Content;
 
             if (Page.GetPageType(Url) == Page.PageType.CSS)
             {
-                return this.Content(content, "text/css");
+                return Content(content, "text/css");
             }
             else if (Page.GetPageType(Url) == Page.PageType.JS)
             {
-                return this.Content(content, "application/javascript");
+                return Content(content, "application/javascript");
             }
             else
             {
-                List<TemplateParameter> templateParameters = new List<TemplateParameter>();
+                List<TemplateParameter> templateParameters = new();
 
-                foreach (string k in this.Request.Query.Keys)
+                foreach (string k in Request.Query.Keys)
                 {
                     if (page.Parameters.FirstOrDefault(t => t.Name == k) is Penguin.Cms.Pages.TemplateParameter t)
                     {
@@ -49,9 +49,14 @@ namespace Penguin.Cms.Modules.Pages.Controllers
                     }
                 }
 
-                (string RelativePath, object Model) = this.PageRenderer.GenerateRenderInformation(page, templateParameters);
-                return this.View(RelativePath.Replace('\\', '/'), Model);
+                (string RelativePath, object Model) = PageRenderer.GenerateRenderInformation(page, templateParameters);
+                return View(RelativePath.Replace('\\', '/'), Model);
             }
+        }
+
+        public ActionResult RenderPage(Uri Url)
+        {
+            throw new NotImplementedException();
         }
     }
 }

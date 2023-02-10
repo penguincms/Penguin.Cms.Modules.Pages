@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
 {
-
     public class PageTreeDirectory
     {
         private const string NULL_PAGE_URL_MESSAGE = "Page Url can not be null";
@@ -17,9 +16,9 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Models
 
         public PageTreeDirectory(Page page, string url, List<PageTreeDirectory>? children = null)
         {
-            this.Page = page;
-            this.Url = url;
-            this.Children = children ?? new List<PageTreeDirectory>();
+            Page = page;
+            Url = url;
+            Children = children ?? new List<PageTreeDirectory>();
         }
     }
 }

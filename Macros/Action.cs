@@ -14,14 +14,14 @@ namespace Penguin.Cms.Modules.Pages.Macros
 {
     public class Action : IMessageHandler<Penguin.Messaging.Application.Messages.Startup>, IMacroProvider
     {
-        private static readonly List<Macro> ControllerMacros = new List<Macro>();
+        private static readonly List<Macro> ControllerMacros = new();
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup message)
         {
-            this.Refresh();
+            Refresh();
         }
 
-        public List<Macro> GetMacros(object o)
+        public List<Macro> GetMacros(object requester)
         {
             return ControllerMacros;
         }
@@ -46,9 +46,8 @@ namespace Penguin.Cms.Modules.Pages.Macros
                         }
 
                         string Parameters = string.Join(", ", thisMethod.GetParameters().Select(p => $"{p.ParameterType.FullName} {p.Name}"));
-                        Macro thisMacro = new Macro
-                        (
-                            this.GetType().Name,
+                        Macro thisMacro = new(
+                            GetType().Name,
                             $"@Html.Action(\"{thisMethod.Name}\", \"{thisController.Name.Remove("Controller")}\", \"\", {Parameters})"
                         );
 

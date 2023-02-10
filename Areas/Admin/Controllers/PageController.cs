@@ -28,22 +28,22 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
 
         public PageController(ComponentService componentService, PageRepository pageRepository, IServiceProvider serviceProvider, IUserSession userSession) : base(serviceProvider, userSession)
         {
-            this.ComponentService = componentService;
-            this.PageRepository = pageRepository;
+            ComponentService = componentService;
+            PageRepository = pageRepository;
         }
 
         public ActionResult AddCSS(string Url)
         {
-            EditNodePageModel model = new EditNodePageModel(Url, this.PageRepository.GetByUrl(Url));
+            EditNodePageModel model = new(Url, PageRepository.GetByUrl(Url));
 
-            return this.View(model);
+            return View(model);
         }
 
         public ActionResult AddFolder(string Url)
         {
-            EditNodePageModel model = new EditNodePageModel(Url);
+            EditNodePageModel model = new(Url);
 
-            return this.View(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -64,34 +64,34 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 throw new NullReferenceException(NULL_PAGE_URL_MESSAGE);
             }
 
-            using (IWriteContext writeContext = this.PageRepository.WriteContext())
+            using (IWriteContext writeContext = PageRepository.WriteContext())
             {
-                Page thisPage = new Page
+                Page thisPage = new()
                 {
                     Url = Path.Combine(model.BaseUrl, model.Page.Url).Replace('\\', '/')
                 };
 
-                this.PageRepository.AddOrUpdate(thisPage);
+                PageRepository.AddOrUpdate(thisPage);
             }
 
-            return this.Redirect("/Admin/Page/Index");
+            return Redirect("/Admin/Page/Index");
         }
 
         public ActionResult AddJS(string Url)
         {
-            EditNodePageModel model = new EditNodePageModel(Url, this.PageRepository.GetByUrl(Url));
+            EditNodePageModel model = new(Url, PageRepository.GetByUrl(Url));
 
-            return this.View(model);
+            return View(model);
         }
 
         public ActionResult AddPage(string Url)
         {
-            EditNodePageModel model = new EditNodePageModel(Url)
+            EditNodePageModel model = new(Url)
             {
-                Macros = new MacroService(this.ServiceProvider).GetMacros(null)
+                Macros = new MacroService(ServiceProvider).GetMacros(null)
             };
 
-            return this.View("EditNode", model);
+            return View("EditNode", model);
         }
 
         [HttpPost]
@@ -112,51 +112,51 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 throw new NullReferenceException(NULL_PAGE_URL_MESSAGE);
             }
 
-            using (IWriteContext writeContext = this.PageRepository.WriteContext())
+            using (IWriteContext writeContext = PageRepository.WriteContext())
             {
                 model.Page.Url = Path.Combine(model.BaseUrl, model.Page.Url ?? "").Replace("\\", "/", StringComparison.OrdinalIgnoreCase);
 
-                this.PageRepository.AddOrUpdate(model.Page);
+                PageRepository.AddOrUpdate(model.Page);
             }
 
-            return this.Redirect("/Admin/Page/Index");
+            return Redirect("/Admin/Page/Index");
         }
 
         public ActionResult DeleteNode(string Url)
         {
-            using (IWriteContext writeContext = this.PageRepository.WriteContext())
+            using (IWriteContext writeContext = PageRepository.WriteContext())
             {
-                Page thisPage = this.PageRepository.GetByUrl(Url);
+                Page thisPage = PageRepository.GetByUrl(Url);
 
                 thisPage.DateDeleted = DateTime.Now;
             }
 
-            return this.Redirect("/Admin/Page/Index");
+            return Redirect("/Admin/Page/Index");
         }
 
         public ActionResult EditNode(string Url)
         {
-            EditNodePageModel model = new EditNodePageModel(Url, this.PageRepository.GetByUrl(Url));
+            EditNodePageModel model = new(Url, PageRepository.GetByUrl(Url));
 
             if (model.Page is null)
             {
                 throw new NullReferenceException(NULL_PAGE_MESSAGE);
             }
 
-            model.Modules = this.ComponentService.GetComponents<ViewModule, Entity>(model.Page).ToList();
+            model.Modules = ComponentService.GetComponents<ViewModule, Entity>(model.Page).ToList();
 
             if (Page.GetPageType(Url) == Page.PageType.CSS)
             {
-                return this.View("EditCSS", model);
+                return View("EditCSS", model);
             }
             else if (Page.GetPageType(Url) == Page.PageType.JS)
             {
-                return this.View("EditJS", model);
+                return View("EditJS", model);
             }
 
-            model.Macros = new MacroService(this.ServiceProvider).GetMacros(model.Page);
+            model.Macros = new MacroService(ServiceProvider).GetMacros(model.Page);
 
-            return this.View(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -172,9 +172,9 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                 throw new NullReferenceException(NULL_PAGE_MESSAGE);
             }
 
-            using (IWriteContext writeContext = this.PageRepository.WriteContext())
+            using (IWriteContext writeContext = PageRepository.WriteContext())
             {
-                Page thisPage = this.PageRepository.Find(model.Page._Id);
+                Page thisPage = PageRepository.Find(model.Page._Id);
 
                 thisPage.Content = model.Page.Content;
 
@@ -188,10 +188,10 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
 
                 thisPage.Parameters = model.Page.Parameters;
 
-                this.PageRepository.AddOrUpdate(thisPage);
+                PageRepository.AddOrUpdate(thisPage);
             }
 
-            return this.Redirect("/Admin/Page/Index");
+            return Redirect("/Admin/Page/Index");
         }
 
         private PageTreeDirectory BuildPageDirectory(List<Page> Pages, PageTreeDirectory root)
@@ -203,21 +203,41 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
                                         string.Equals(
                                             new FileInfo(p.Url).Directory.FullName,
                                             new DirectoryInfo(CurrentDir).FullName,
-                                            StringComparison.InvariantCultureIgnoreCase))
+                                            StringComparison.OrdinalIgnoreCase))
                                        .ToList();
 
             foreach (Page child in Children)
             {
-                PageTreeDirectory model = new PageTreeDirectory(child);
+                PageTreeDirectory model = new(child);
 
                 _ = Pages.Remove(model.Page);
 
-                model = this.BuildPageDirectory(Pages, model);
+                model = BuildPageDirectory(Pages, model);
 
                 root.Children.Add(model);
             }
 
             return root;
+        }
+
+        public ActionResult AddCSS(Uri Url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult AddFolder(Uri Url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult AddJS(Uri Url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult AddPage(Uri Url)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Penguin.Cms.Modules.Pages.Macros
     /// </summary>
     public class Field : IMacroProvider
     {
-        public List<Macro> GetMacros(object o)
+        public List<Macro> GetMacros(object requester)
         {
             return new List<Macro>();
         }

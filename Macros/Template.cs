@@ -18,7 +18,7 @@ namespace Penguin.Cms.Modules.Pages.Macros
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     public class Template : IMessageHandler<Updated<Page>>, IMessageHandler<Created<Page>>, IMessageHandler<Penguin.Messaging.Application.Messages.Startup>, IMacroProvider
     {
-        private static readonly List<Macro> TemplateMacros = new List<Macro>();
+        private static readonly List<Macro> TemplateMacros = new();
         protected PageRenderer PageRenderer { get; set; }
 
         protected PageRepository PageRepository { get; set; }
@@ -27,36 +27,36 @@ namespace Penguin.Cms.Modules.Pages.Macros
 
         public Template(PageRenderer pageRenderer, IViewRenderService viewRenderService, PageRepository pageRepository)
         {
-            this.PageRenderer = pageRenderer;
-            this.ViewRenderService = viewRenderService;
-            this.PageRepository = pageRepository;
+            PageRenderer = pageRenderer;
+            ViewRenderService = viewRenderService;
+            PageRepository = pageRepository;
         }
 
-        public void AcceptMessage(Updated<Page> page)
+        public void AcceptMessage(Updated<Page> message)
         {
-            this.Refresh();
+            Refresh();
         }
 
-        public void AcceptMessage(Created<Page> page)
+        public void AcceptMessage(Created<Page> message)
         {
-            this.Refresh();
+            Refresh();
         }
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup message)
         {
-            this.Refresh();
+            Refresh();
         }
 
-        public List<Macro> GetMacros(object o)
+        public List<Macro> GetMacros(object requester)
         {
             return TemplateMacros;
         }
 
         public HtmlString Render(string Url, object? Model = null)
         {
-            Page page = this.PageRepository.GetByUrl(Url);
+            Page page = PageRepository.GetByUrl(Url);
 
-            List<Penguin.Templating.Abstractions.TemplateParameter> parameters = new List<Penguin.Templating.Abstractions.TemplateParameter>();
+            List<Penguin.Templating.Abstractions.TemplateParameter> parameters = new();
 
             if (Model != null)
             {
@@ -71,9 +71,9 @@ namespace Penguin.Cms.Modules.Pages.Macros
                 }
             }
 
-            (string RelativePath, object templateModel) = this.PageRenderer.GenerateRenderInformation(page, parameters);
+            (string RelativePath, object templateModel) = PageRenderer.GenerateRenderInformation(page, parameters);
 
-            Task<string> result = this.ViewRenderService.RenderToStringAsync(RelativePath, "", templateModel, true);
+            Task<string> result = ViewRenderService.RenderToStringAsync(RelativePath, "", templateModel, true);
 
             result.Wait();
 
@@ -89,8 +89,7 @@ namespace Penguin.Cms.Modules.Pages.Macros
                 ParameterString = $", new {{{string.Join(", ", thisPage.Parameters.Select(p => $"{p.Name} = \"\""))}}}";
             }
 
-            Macro macro = new Macro
-            ("Template",
+            Macro macro = new("Template",
                  $"@Template.Render(\"{thisPage.Url}\"{ParameterString})"
 
             );
@@ -104,13 +103,18 @@ namespace Penguin.Cms.Modules.Pages.Macros
             {
                 TemplateMacros.Clear();
 
-                IEnumerable<Page> allPages = this.PageRepository.Where(p => p.Type == Page.PageType.HTML || p.Type == Page.PageType.WYSIWYG);
+                IEnumerable<Page> allPages = PageRepository.Where(p => p.Type == Page.PageType.HTML || p.Type == Page.PageType.WYSIWYG);
 
                 foreach (Page thisPage in allPages)
                 {
                     TemplateMacros.Add(PageToMacro(thisPage));
                 }
             }
+        }
+
+        public HtmlString Render(System.Uri Url, object? Model)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
