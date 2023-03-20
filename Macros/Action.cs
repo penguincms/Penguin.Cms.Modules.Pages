@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Loxifi;
+using Microsoft.AspNetCore.Mvc;
 using Penguin.Cms.Abstractions;
 using Penguin.Cms.Abstractions.Interfaces;
 using Penguin.Cms.Core.Attributes;
