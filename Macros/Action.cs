@@ -33,7 +33,7 @@ namespace Penguin.Cms.Modules.Pages.Macros
             {
                 ControllerMacros.Clear();
 
-                IEnumerable<Type> Controllers = TypeFactory.GetDerivedTypes(typeof(Controller));
+                IEnumerable<Type> Controllers = TypeFactory.Default.GetDerivedTypes(typeof(Controller));
 
                 foreach (Type thisController in Controllers)
                 {
