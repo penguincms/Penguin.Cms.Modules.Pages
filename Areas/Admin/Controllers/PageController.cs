@@ -220,25 +220,5 @@ namespace Penguin.Cms.Modules.Pages.Areas.Admin.Controllers
 
             return root;
         }
-
-        public ActionResult AddCSS(Uri Url)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult AddFolder(Uri Url)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult AddJS(Uri Url)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult AddPage(Uri Url)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -54,9 +54,6 @@ namespace Penguin.Cms.Modules.Pages.Controllers
             }
         }
 
-        public ActionResult RenderPage(Uri Url)
-        {
-            throw new NotImplementedException();
-        }
+    
     }
 }
